@@ -171,10 +171,9 @@ namespace BinarySerializer.PS1
 
 				return Pages[y][x];
 			}
-            catch (Exception) 
+            catch (Exception ex)
             {
-				UnityEngine.Debug.LogError(x + " - " + y);
-				throw;
+                throw new Exception($"Error getting VRAM page at ({x}, {y})", ex);
 			}
 		}
 
