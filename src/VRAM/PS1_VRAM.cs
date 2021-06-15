@@ -11,7 +11,8 @@ namespace BinarySerializer.PS1
 
 		protected List<ReservedBlock> ReservedBlocks { get; } = new List<ReservedBlock>();
 		public Page[][] Pages { get; } = new Page[2][]; // y, x
-		public int CurrentXPage { get; set; }
+        public List<Palette> Palettes { get; } = new List<Palette>(); // Optional collection of any palettes in the V-RAM
+        public int CurrentXPage { get; set; }
 		public int CurrentYPage { get; set; }
 		public int NextYInPage { get; set; }
 
@@ -162,6 +163,12 @@ namespace BinarySerializer.PS1
             }
         }
 
+        public void AddPalette(RGBA5551Color[] colors, int pageX, int pageY, int x, int y)
+        {
+            AddDataAt(pageX, pageY, x, y, colors.SelectMany(c => BitConverter.GetBytes((ushort)c.ColorValue)).ToArray(), 512);
+            Palettes.Add(new Palette(colors, pageX * PageWidth + x, pageY * PageHeight + y));
+        }
+
 		private Page GetPage(int x, int y) 
         {
 			try 
@@ -248,6 +255,20 @@ namespace BinarySerializer.PS1
 				return data;
 			}*/
 		}
+
+        public class Palette
+        {
+            public Palette(RGBA5551Color[] colors, int x, int y)
+            {
+                Colors = colors;
+                X = x;
+                Y = y;
+            }
+
+            public RGBA5551Color[] Colors { get; }
+            public int X { get; }
+            public int Y { get; }
+        }
 
 		public struct ReservedBlock
         {
