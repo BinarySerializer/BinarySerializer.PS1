@@ -125,13 +125,13 @@ namespace BinarySerializer.PS1
 			}*/
 		}
 
-		public void AddDataAt(int startXPage, int startYPage, int startX, int startY, byte[] data, int width) 
+		public void AddDataAt(int startXPage, int startYPage, int startX, int startY, byte[] data, int width, int? height = null)
         {
 			if (data == null)
                 return;
 
-			int height = (startX + data.Length) / width + (((startX + data.Length) % width != 0) ? 1 : 0);
-
+			height ??= (startX + data.Length) / width + (((startX + data.Length) % width != 0) ? 1 : 0);
+            
             if (height <= 0 || width <= 0) 
                 return;
 
@@ -163,9 +163,9 @@ namespace BinarySerializer.PS1
             }
         }
 
-        public void AddPalette(RGBA5551Color[] colors, int pageX, int pageY, int x, int y)
+        public void AddPalette(RGBA5551Color[] colors, int pageX, int pageY, int x, int y, int width = 512, int? height = null)
         {
-            AddDataAt(pageX, pageY, x, y, colors.SelectMany(c => BitConverter.GetBytes((ushort)c.ColorValue)).ToArray(), 512);
+            AddDataAt(pageX, pageY, x, y, colors.SelectMany(c => BitConverter.GetBytes((ushort)c.ColorValue)).ToArray(), width, height);
             Palettes.Add(new Palette(colors, pageX * PageWidth + x, pageY * PageHeight + y));
         }
 
