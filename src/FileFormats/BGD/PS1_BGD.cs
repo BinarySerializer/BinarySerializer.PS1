@@ -1,0 +1,44 @@
+﻿using System;
+
+namespace BinarySerializer.PS1
+{
+    public class PS1_BGD : BinarySerializable
+    {
+        public byte ID { get; set; }
+        public byte Version { get; set; }
+        public bool HasATTR { get; set; }
+        public bool IsATTR16Bit { get; set; }
+        public byte MapWidth { get; set; }
+        public byte MapHeight { get; set; }
+        public byte CellWidth { get; set; }
+        public byte CellHeight { get; set; }
+        public ushort[] Map { get; set; } // CEL indices
+
+        public override void SerializeImpl(SerializerObject s)
+        {
+            ID = s.Serialize<byte>(ID, name: nameof(ID));
+
+            if (ID != 0x23)
+                throw new Exception($"Invalid ID {ID}");
+
+            Version = s.Serialize<byte>(Version, name: nameof(Version));
+
+            if (Version != 0x00)
+                throw new Exception($"Invalid Version {Version}");
+
+            s.SerializeBitValues<ushort>(bitFunc =>
+            {
+                bitFunc(0, 14, name: "Reserved");
+                HasATTR = bitFunc(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
+                IsATTR16Bit = bitFunc(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
+            });
+
+            MapWidth = s.Serialize<byte>(MapWidth, name: nameof(MapWidth));
+            MapHeight = s.Serialize<byte>(MapHeight, name: nameof(MapHeight));
+            CellWidth = s.Serialize<byte>(CellWidth, name: nameof(CellWidth));
+            CellHeight = s.Serialize<byte>(CellHeight, name: nameof(CellHeight));
+
+            Map = s.SerializeArray<ushort>(Map, MapWidth * MapHeight, name: nameof(Map));
+        }
+    }
+}
