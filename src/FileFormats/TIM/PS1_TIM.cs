@@ -35,6 +35,7 @@ namespace BinarySerializer.PS1
             {
                 ColorFormat = (TIM_ColorFormat)bitFunc((int)ColorFormat, 3, name: nameof(ColorFormat));
                 HasClut = bitFunc(HasClut ? 1 : 0, 1, name: nameof(HasClut)) == 1;
+                bitFunc(default, 28, name: "Padding");
             });
 
             if (HasClut)
@@ -46,8 +47,13 @@ namespace BinarySerializer.PS1
             Width = s.Serialize<ushort>(Width, name: nameof(Width));
             Height = s.Serialize<ushort>(Height, name: nameof(Height));
 
+            var imgDataLength = Length - 12; // width * height * 2
+
+            if (Width == 0 || Height == 0)
+                imgDataLength = 4;
+
             if (ColorFormat == TIM_ColorFormat.BPP_4 || ColorFormat == TIM_ColorFormat.BPP_8)
-                ImgData = s.SerializeArray<byte>(ImgData, Length - 12, name: nameof(ImgData)); // Width * Height * 2
+                ImgData = s.SerializeArray<byte>(ImgData, imgDataLength, name: nameof(ImgData));
             else
                 throw new NotImplementedException("Raw image data is currently not supported");
         }
