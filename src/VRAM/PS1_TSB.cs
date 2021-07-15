@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TexturePageInfo : BinarySerializable
+    public class PS1_TSB : BinarySerializable
     {
         // See http://hitmen.c02.at/files/docs/psx/psx.pdf page 37
         public byte TX { get; set; } // value * 64
