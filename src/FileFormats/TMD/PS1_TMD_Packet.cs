@@ -22,6 +22,7 @@ namespace BinarySerializer.PS1
 
         public PS1_TMD_Color[] RGB { get; set; }
         public ushort[] Vertices { get; set; }
+        public ushort[] Normals { get; set; }
         public PS1_TMD_UV[] UV { get; set; }
 
         public PS1_CBA CBA { get; set; }
@@ -38,43 +39,54 @@ namespace BinarySerializer.PS1
 
             if (Mode.Code == PS1_TMD_PacketMode.PacketModeCODE.Polygon)
             {
-                // Has light source
-                if (!Flags.HasFlag(PacketFlags.LGT))
-                {
-                    throw new NotImplementedException("Serialize polygon with light source");
-                }
+                var verticesCount = Mode.IsQuad ? 4 : 3;
+                var hasLightSource = !Flags.HasFlag(PacketFlags.LGT);
+
+                var normalsCount = 0;
+
+                if (hasLightSource)
+                    normalsCount = Mode.IIP ? verticesCount : 1;
+
+                int rgbCount;
+
+                if (hasLightSource)
+                    rgbCount = Flags.HasFlag(PacketFlags.GRD) ? verticesCount : 0;
                 else
+                    rgbCount = Mode.IIP ? verticesCount : 1;
+
+                // Check if it has a texture
+                if (Mode.TME)
                 {
-                    // Check if it has a texture
-                    if (Mode.TME)
-                    {
-                        UV ??= new PS1_TMD_UV[Mode.IsQuad ? 4 : 3];
+                    UV ??= new PS1_TMD_UV[Mode.IsQuad ? 4 : 3];
 
-                        UV[0] = s.SerializeObject<PS1_TMD_UV>(UV[0], name: $"{nameof(UV)}[0]");
-                        CBA = s.SerializeObject<PS1_CBA>(CBA, name: nameof(CBA));
-                        UV[1] = s.SerializeObject<PS1_TMD_UV>(UV[1], name: $"{nameof(UV)}[1]");
-                        TSB = s.SerializeObject<PS1_TSB>(TSB, name: nameof(TSB));
-                        UV[2] = s.SerializeObject<PS1_TMD_UV>(UV[2], name: $"{nameof(UV)}[2]");
-                        s.Align();
-
-                        if (Mode.IsQuad)
-                        {
-                            UV[3] = s.SerializeObject<PS1_TMD_UV>(UV[3], name: $"{nameof(UV)}[3]");
-                            s.Align();
-                        }
-                    }
-
-                    var rgbLength = 1;
-
-                    if (Mode.IIP)
-                        rgbLength = Mode.IsQuad ? 4 : 3;
-
-                    RGB = s.SerializeObjectArray<PS1_TMD_Color>(RGB, rgbLength, name: nameof(RGB));
-
-                    Vertices = s.SerializeArray<ushort>(Vertices, Mode.IsQuad ? 4 : 3, name: nameof(Vertices));
-
+                    UV[0] = s.SerializeObject<PS1_TMD_UV>(UV[0], name: $"{nameof(UV)}[0]");
+                    CBA = s.SerializeObject<PS1_CBA>(CBA, name: nameof(CBA));
+                    UV[1] = s.SerializeObject<PS1_TMD_UV>(UV[1], name: $"{nameof(UV)}[1]");
+                    TSB = s.SerializeObject<PS1_TSB>(TSB, name: nameof(TSB));
+                    UV[2] = s.SerializeObject<PS1_TMD_UV>(UV[2], name: $"{nameof(UV)}[2]");
                     s.Align();
+
+                    if (Mode.IsQuad)
+                    {
+                        UV[3] = s.SerializeObject<PS1_TMD_UV>(UV[3], name: $"{nameof(UV)}[3]");
+                        s.Align();
+                    }
                 }
+
+                RGB = s.SerializeObjectArray<PS1_TMD_Color>(RGB, rgbCount, name: nameof(RGB));
+
+                Normals ??= new ushort[normalsCount];
+                Vertices ??= new ushort[verticesCount];
+
+                for (int i = 0; i < Vertices.Length; i++)
+                {
+                    if (i < Normals.Length)
+                        Normals[i] = s.Serialize<ushort>(Normals[i], name: $"{nameof(Normals)}[{i}]");
+
+                    Vertices[i] = s.Serialize<ushort>(Vertices[i], name: $"{nameof(Vertices)}[{i}]");
+                }
+
+                s.Align();
             }
             else if (Mode.Code == PS1_TMD_PacketMode.PacketModeCODE.StraightLine)
             {
