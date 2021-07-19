@@ -6,8 +6,8 @@ namespace BinarySerializer.PS1
 {
     public class PS1_VRAM
     {
-		private const int PageHeight = 256;
-		private const int PageWidth = 128; // for 8-bit CLUT.
+		public const int PageHeight = 256;
+        public const int PageWidth = 128; // for 8-bit CLUT.
 
 		protected List<ReservedBlock> ReservedBlocks { get; } = new List<ReservedBlock>();
 		public Page[][] Pages { get; } = new Page[2][]; // y, x
