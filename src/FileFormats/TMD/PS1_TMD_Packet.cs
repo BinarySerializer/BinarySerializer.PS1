@@ -50,9 +50,18 @@ namespace BinarySerializer.PS1
                 int rgbCount;
 
                 if (hasLightSource)
-                    rgbCount = Flags.HasFlag(PacketFlags.GRD) ? verticesCount : 0;
+                {
+                    if (Flags.HasFlag(PacketFlags.GRD))
+                        rgbCount = verticesCount;
+                    else if (Mode.TME)
+                        rgbCount = 0;
+                    else
+                        rgbCount = 1;
+                }
                 else
+                {
                     rgbCount = Mode.IIP ? verticesCount : 1;
+                }
 
                 // Check if it has a texture
                 if (Mode.TME)
