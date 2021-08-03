@@ -35,6 +35,10 @@ namespace BinarySerializer.PS1
             Flags = s.Serialize<PacketFlags>(Flags, name: nameof(Flags));
             Mode = s.SerializeObject<PS1_TMD_PacketMode>(Mode, name: nameof(Mode));
 
+            // Don't parse if the packet is empty
+            if (ILen == 0)
+                return;
+
             var endPointer = s.CurrentPointer + ILen * 4;
 
             if (Mode.Code == PS1_TMD_PacketMode.PacketModeCODE.Polygon)
