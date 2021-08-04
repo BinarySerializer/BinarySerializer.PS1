@@ -192,7 +192,7 @@ namespace BinarySerializer.PS1
 				x -= PageWidth;
 			}
 			
-            if (y > PageHeight) 
+            if (y >= PageHeight) 
             {
 				pageY++;
 				y -= PageHeight;
