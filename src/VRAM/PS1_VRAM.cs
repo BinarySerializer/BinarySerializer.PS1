@@ -205,6 +205,27 @@ namespace BinarySerializer.PS1
 			
             return page.GetByte(x, y);
 		}
+		public byte[] GetPixels8(int pageX, int pageY, int x, int y, int length) 
+        {
+            while (x >= PageWidth) 
+            {
+				pageX++;
+				x -= PageWidth;
+			}
+			
+            if (y > PageHeight) 
+            {
+				pageY++;
+				y -= PageHeight;
+			}
+
+			Page page = GetPage(pageX, pageY);
+
+            if (page == null) 
+                return new byte[length];
+			
+            return page.GetBytes(x, y, length);
+		}
 
 		public RGBA5551Color GetColor1555(int pageX, int pageY, int x, int y) 
         {
@@ -219,6 +240,14 @@ namespace BinarySerializer.PS1
 			public byte[] Data { get; } = new byte[PageWidth * PageHeight];
 			
             public byte GetByte(int x, int y) => Data[y * PageWidth + x];
+            public byte[] GetBytes(int x, int y, int length)
+            {
+                var buffer = new byte[length];
+
+                Array.Copy(Data, y * PageWidth + x, buffer, 0, length);
+
+                return buffer;
+            }
             public void SetByte(int x, int y, byte value) => Data[y * PageWidth + x] = value;
             
             /*public int width;
