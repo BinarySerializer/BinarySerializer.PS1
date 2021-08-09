@@ -235,7 +235,22 @@ namespace BinarySerializer.PS1
 			return new RGBA5551Color(col);
 		}
 
-		public class Page 
+        public RGBA5551Color[] GetColors1555(int pageX, int pageY, int x, int y, int length)
+        {
+            var pal = new RGBA5551Color[length];
+            
+            for (int i = 0; i < pal.Length; i++)
+            {
+                byte b0 = GetPixel8(pageX, pageY, (x + i) * 2, y);
+                byte b1 = GetPixel8(pageX, pageY, (x + i) * 2 + 1, y);
+                ushort col = (ushort)(b0 | (b1 << 8));
+                pal[i] = new RGBA5551Color(col);
+            }
+
+            return pal;
+        }
+
+        public class Page 
         {
 			public byte[] Data { get; } = new byte[PageWidth * PageHeight];
 			
