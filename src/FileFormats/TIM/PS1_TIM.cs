@@ -15,7 +15,7 @@ namespace BinarySerializer.PS1
         public ushort Width { get; set; }
         public ushort Height { get; set; }
         public byte[] ImgData { get; set; }
-        public RGBA5551Color[] Palette { get; set; }
+        public RGBA5551Color[] ImgData_16 { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -54,8 +54,10 @@ namespace BinarySerializer.PS1
 
             if (ColorFormat == TIM_ColorFormat.BPP_4 || ColorFormat == TIM_ColorFormat.BPP_8)
                 ImgData = s.SerializeArray<byte>(ImgData, imgDataLength, name: nameof(ImgData));
+            else if (ColorFormat == TIM_ColorFormat.BPP_16)
+                ImgData_16 = s.SerializeObjectArray<RGBA5551Color>(ImgData_16, Width * Height, name: nameof(ImgData_16));
             else
-                throw new NotImplementedException("Raw image data is currently not supported");
+                throw new NotImplementedException("Raw 24-bit image data is currently not supported");
         }
 
         public enum TIM_ColorFormat : byte
