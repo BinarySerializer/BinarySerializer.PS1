@@ -10,10 +10,7 @@ namespace BinarySerializer.PS1
         public bool HasClut { get; set; }
         public TIM_Clut Clut { get; set; }
         public int Length { get; set; }
-        public ushort XPos { get; set; }
-        public ushort YPos { get; set; }
-        public ushort Width { get; set; }
-        public ushort Height { get; set; }
+        public PS1_VRAMRegion Region { get; set; }
         public byte[] ImgData { get; set; }
         public RGBA5551Color[] ImgData_16 { get; set; }
 
@@ -42,20 +39,17 @@ namespace BinarySerializer.PS1
                 Clut = s.SerializeObject<TIM_Clut>(Clut, name: nameof(Clut));
 
             Length = s.Serialize<int>(Length, name: nameof(Length));
-            XPos = s.Serialize<ushort>(XPos, name: nameof(XPos));
-            YPos = s.Serialize<ushort>(YPos, name: nameof(YPos));
-            Width = s.Serialize<ushort>(Width, name: nameof(Width));
-            Height = s.Serialize<ushort>(Height, name: nameof(Height));
+            Region = s.SerializeObject<PS1_VRAMRegion>(Region, name: nameof(Region));
 
             var imgDataLength = Length - 12; // width * height * 2
 
-            if (Width == 0 || Height == 0)
+            if (Region.Width == 0 || Region.Height == 0)
                 imgDataLength = 4;
 
             if (ColorFormat == TIM_ColorFormat.BPP_4 || ColorFormat == TIM_ColorFormat.BPP_8)
                 ImgData = s.SerializeArray<byte>(ImgData, imgDataLength, name: nameof(ImgData));
             else if (ColorFormat == TIM_ColorFormat.BPP_16)
-                ImgData_16 = s.SerializeObjectArray<RGBA5551Color>(ImgData_16, Width * Height, name: nameof(ImgData_16));
+                ImgData_16 = s.SerializeObjectArray<RGBA5551Color>(ImgData_16, Region.Width * Region.Height, name: nameof(ImgData_16));
             else
                 throw new NotImplementedException("Raw 24-bit image data is currently not supported");
         }
@@ -71,20 +65,14 @@ namespace BinarySerializer.PS1
         public class TIM_Clut : BinarySerializable
         {
             public int Length { get; set; }
-            public ushort XPos { get; set; }
-            public ushort YPos { get; set; }
-            public ushort Width { get; set; }
-            public ushort Height { get; set; }
+            public PS1_VRAMRegion Region { get; set; }
             public RGBA5551Color[] Palette { get; set; }
 
             public override void SerializeImpl(SerializerObject s)
             {
                 Length = s.Serialize<int>(Length, name: nameof(Length));
-                XPos = s.Serialize<ushort>(XPos, name: nameof(XPos));
-                YPos = s.Serialize<ushort>(YPos, name: nameof(YPos));
-                Width = s.Serialize<ushort>(Width, name: nameof(Width));
-                Height = s.Serialize<ushort>(Height, name: nameof(Height));
-                Palette = s.SerializeObjectArray<RGBA5551Color>(Palette, Width * Height, name: nameof(Palette));
+                Region = s.SerializeObject<PS1_VRAMRegion>(Region, name: nameof(Region));
+                Palette = s.SerializeObjectArray<RGBA5551Color>(Palette, Region.Width * Region.Height, name: nameof(Palette));
             }
         }
     }
