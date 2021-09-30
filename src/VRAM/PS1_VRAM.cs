@@ -173,7 +173,10 @@ namespace BinarySerializer.PS1
         {
 			try 
             {
-				if (x >= Pages[y].Length) 
+                if (y >= Pages.Length)
+                    return null;
+
+                if (x >= Pages[y].Length) 
                     return null;
 
 				return Pages[y][x];
