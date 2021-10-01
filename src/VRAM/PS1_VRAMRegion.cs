@@ -2,6 +2,16 @@
 {
     public class PS1_VRAMRegion : BinarySerializable
     {
+        public PS1_VRAMRegion() { }
+
+        public PS1_VRAMRegion(short xPos, short yPos, short width, short height)
+        {
+            XPos = xPos;
+            YPos = yPos;
+            Width = width;
+            Height = height;
+        }
+
         public short XPos { get; set; }
         public short YPos { get; set; }
         public short Width { get; set; }
