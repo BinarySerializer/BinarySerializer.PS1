@@ -12,7 +12,10 @@ namespace BinarySerializer.PS1
         public byte MapHeight { get; set; }
         public byte CellWidth { get; set; }
         public byte CellHeight { get; set; }
+
         public ushort[] Map { get; set; } // CEL indices
+        public byte[] Attr_8 { get; set; }
+        public ushort[] Attr_16 { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -29,8 +32,8 @@ namespace BinarySerializer.PS1
             s.SerializeBitValues<ushort>(bitFunc =>
             {
                 bitFunc(0, 14, name: "Reserved");
-                HasATTR = bitFunc(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
                 IsATTR16Bit = bitFunc(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
+                HasATTR = bitFunc(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
             });
 
             MapWidth = s.Serialize<byte>(MapWidth, name: nameof(MapWidth));
@@ -39,6 +42,14 @@ namespace BinarySerializer.PS1
             CellHeight = s.Serialize<byte>(CellHeight, name: nameof(CellHeight));
 
             Map = s.SerializeArray<ushort>(Map, MapWidth * MapHeight, name: nameof(Map));
+
+            if (HasATTR)
+            {
+                if (IsATTR16Bit)
+                    Attr_16 = s.SerializeArray<ushort>(Attr_16, MapWidth * MapHeight, name: nameof(Attr_16));
+                else
+                    Attr_8 = s.SerializeArray<byte>(Attr_8, MapWidth * MapHeight, name: nameof(Attr_8));
+            }
         }
     }
 }
