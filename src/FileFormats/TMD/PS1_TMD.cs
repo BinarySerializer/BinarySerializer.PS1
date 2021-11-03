@@ -4,7 +4,10 @@ namespace BinarySerializer.PS1
 {
     public class PS1_TMD : BinarySerializable
     {
-        public bool Pre_HasParts { get; set; } // Indicates if the objects have parts defined in place of the scale
+        /// <summary>
+        /// Indicates if the objects have bones defined in place of the scale
+        /// </summary>
+        public bool Pre_HasBones { get; set; }
 
         // Header
         public uint ID { get; set; }
@@ -32,7 +35,7 @@ namespace BinarySerializer.PS1
             Objects = s.SerializeObjectArray<PS1_TMD_Object>(Objects, ObjectsCount, x =>
             {
                 x.Pre_PointerAnchor = Flags.HasFlag(TMDFlags.FIXP) ? null : anchor;
-                x.Pre_HasParts = Pre_HasParts;
+                x.Pre_HasBones = Pre_HasBones;
             }, name: nameof(Objects));
         }
 

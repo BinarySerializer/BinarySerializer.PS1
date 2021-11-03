@@ -3,7 +3,7 @@
     public class PS1_TMD_Object : BinarySerializable
     {
         public Pointer Pre_PointerAnchor { get; set; }
-        public bool Pre_HasParts { get; set; }
+        public bool Pre_HasBones { get; set; }
 
         public Pointer VerticesPointer { get; set; }
         public uint VerticesCount { get; set; }
@@ -12,8 +12,8 @@
         public Pointer PrimitivesPointer { get; set; }
         public uint PrimitivesCount { get; set; }
         public int Scale { get; set; } // Raised to the second power
-        public int PartsCount { get; set; }
-        public PS1_TMD_Part[] Parts { get; set; }
+        public int BonesCount { get; set; }
+        public PS1_TMD_Bone[] Bones { get; set; }
 
         // Serialized from pointers
         public PS1_TMD_Vertex[] Vertices { get; set; }
@@ -29,10 +29,10 @@
             PrimitivesPointer = s.SerializePointer(PrimitivesPointer, anchor: Pre_PointerAnchor, name: nameof(PrimitivesPointer));
             PrimitivesCount = s.Serialize<uint>(PrimitivesCount, name: nameof(PrimitivesCount));
 
-            if (Pre_HasParts)
+            if (Pre_HasBones)
             {
-                PartsCount = s.Serialize<int>(PartsCount, name: nameof(PartsCount));
-                Parts = s.SerializeObjectArray<PS1_TMD_Part>(Parts, PartsCount, name: nameof(Parts));
+                BonesCount = s.Serialize<int>(BonesCount, name: nameof(BonesCount));
+                Bones = s.SerializeObjectArray<PS1_TMD_Bone>(Bones, BonesCount, name: nameof(Bones));
             }
             else
             {
