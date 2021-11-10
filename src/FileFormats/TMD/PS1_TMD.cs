@@ -9,6 +9,13 @@ namespace BinarySerializer.PS1
         /// </summary>
         public bool Pre_HasBones { get; set; }
 
+        /// <summary>
+        /// Indicates if the objects have a color table defined in the header
+        /// </summary>
+        public bool Pre_HasColorTable { get; set; }
+
+        public bool Pre_HasBonePositions { get; set; }
+
         // Header
         public uint ID { get; set; }
         public TMDFlags Flags { get; set; }
@@ -36,6 +43,8 @@ namespace BinarySerializer.PS1
             {
                 x.Pre_PointerAnchor = Flags.HasFlag(TMDFlags.FIXP) ? null : anchor;
                 x.Pre_HasBones = Pre_HasBones;
+                x.Pre_HasColorTable = Pre_HasColorTable;
+                x.Pre_HasBonePositions = Pre_HasBonePositions;
             }, name: nameof(Objects));
         }
 
