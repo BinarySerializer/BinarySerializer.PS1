@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace BinarySerializer.PS1
 {
@@ -38,7 +39,7 @@ namespace BinarySerializer.PS1
 
             // OBJ TABLE
 
-            var anchor = s.CurrentPointer;
+            Pointer anchor = s.CurrentPointer;
             Objects = s.SerializeObjectArray<PS1_TMD_Object>(Objects, ObjectsCount, x =>
             {
                 x.Pre_PointerAnchor = Flags.HasFlag(TMDFlags.FIXP) ? null : anchor;
@@ -46,6 +47,11 @@ namespace BinarySerializer.PS1
                 x.Pre_HasColorTable = Pre_HasColorTable;
                 x.Pre_HasBonePositions = Pre_HasBonePositions;
             }, name: nameof(Objects));
+
+            // Go to the end of the file
+            PS1_TMD_Object lastObj = Objects.LastOrDefault();
+            if (lastObj != null)
+                s.Goto(lastObj.NormalsPointer + lastObj.NormalsCount * 8);
         }
 
         [Flags]
