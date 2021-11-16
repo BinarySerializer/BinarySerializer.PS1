@@ -24,5 +24,8 @@
             Width = s.Serialize<short>(Width, name: nameof(Width));
             Height = s.Serialize<short>(Height, name: nameof(Height));
         }
+
+        public override bool UseShortLog => true;
+        public override string ToString() => $"(x: {XPos}, y:{YPos}, width:{Width}, height:{Height})";
     }
 }
