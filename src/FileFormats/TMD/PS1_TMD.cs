@@ -51,7 +51,18 @@ namespace BinarySerializer.PS1
             // Go to the end of the file
             PS1_TMD_Object lastObj = Objects.LastOrDefault();
             if (lastObj != null)
-                s.Goto(lastObj.NormalsPointer + lastObj.NormalsCount * 8);
+            {
+                // The normals are usually at the end, but not always
+                Pointer endPointer = lastObj.Primitives.Last().Offset + lastObj.Primitives.Last().Size;
+
+                if (lastObj.Vertices.Length > 0 && lastObj.Vertices.Last().Offset.FileOffset > endPointer.FileOffset)
+                    endPointer = lastObj.Vertices.Last().Offset + lastObj.Vertices.Last().Size;
+
+                if (lastObj.Normals.Length > 0 && lastObj.Normals.Last().Offset.FileOffset > endPointer.FileOffset)
+                    endPointer = lastObj.Normals.Last().Offset + lastObj.Normals.Last().Size;
+
+                s.Goto(endPointer);
+            }
         }
 
         [Flags]
