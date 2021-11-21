@@ -31,7 +31,6 @@ namespace BinarySerializer.PS1
         public PS1_CBA CBA { get; set; }
         public PS1_TSB TSB { get; set; }
 
-        // TODO: Improve the below code for if there is a color table
         public override void SerializeImpl(SerializerObject s)
         {
             OLen = s.Serialize<byte>(OLen, name: nameof(OLen));
@@ -71,56 +70,101 @@ namespace BinarySerializer.PS1
                     rgbCount = Mode.IIP ? verticesCount : 1;
                 }
 
-                // Check if it has a texture
-                if (Mode.TME)
+                if (!Pre_HasColorTable)
                 {
-                    UV ??= new PS1_TMD_UV[Mode.IsQuad ? 4 : 3];
-
-                    UV[0] = s.SerializeObject<PS1_TMD_UV>(UV[0], name: $"{nameof(UV)}[0]");
-                    CBA = s.SerializeObject<PS1_CBA>(CBA, name: nameof(CBA));
-                    UV[1] = s.SerializeObject<PS1_TMD_UV>(UV[1], name: $"{nameof(UV)}[1]");
-                    TSB = s.SerializeObject<PS1_TSB>(TSB, name: nameof(TSB));
-                    UV[2] = s.SerializeObject<PS1_TMD_UV>(UV[2], name: $"{nameof(UV)}[2]");
-
-                    if (!(Pre_HasColorTable && (Mode.IsQuad || rgbCount == 1)))
-                        s.Align();
-
-                    if (Mode.IsQuad)
+                    // Check if it has a texture
+                    if (Mode.TME)
                     {
-                        UV[3] = s.SerializeObject<PS1_TMD_UV>(UV[3], name: $"{nameof(UV)}[3]");
-                        
-                        if (Pre_HasColorTable)
-                            RGBIndices = s.SerializeArray<ushort>(RGBIndices, rgbCount, name: nameof(RGBIndices));
+                        UV ??= new PS1_TMD_UV[Mode.IsQuad ? 4 : 3];
 
+                        UV[0] = s.SerializeObject<PS1_TMD_UV>(UV[0], name: $"{nameof(UV)}[0]");
+                        CBA = s.SerializeObject<PS1_CBA>(CBA, name: nameof(CBA));
+                        UV[1] = s.SerializeObject<PS1_TMD_UV>(UV[1], name: $"{nameof(UV)}[1]");
+                        TSB = s.SerializeObject<PS1_TSB>(TSB, name: nameof(TSB));
+                        UV[2] = s.SerializeObject<PS1_TMD_UV>(UV[2], name: $"{nameof(UV)}[2]");
                         s.Align();
-                    }
-                    else if (rgbCount == 1 && Pre_HasColorTable)
-                    {
-                        RGBIndices = s.SerializeArray<ushort>(RGBIndices, rgbCount, name: nameof(RGBIndices));
-                        s.Align();
-                    }
-                }
 
-                if (Pre_HasColorTable)
-                    RGBIndices ??= new ushort[rgbCount];
-                else
+                        if (Mode.IsQuad)
+                        {
+                            UV[3] = s.SerializeObject<PS1_TMD_UV>(UV[3], name: $"{nameof(UV)}[3]");
+                            s.Align();
+                        }
+                    }
+
                     RGB = s.SerializeObjectArray<PS1_TMD_Color>(RGB, rgbCount, name: nameof(RGB));
 
-                Normals ??= new ushort[normalsCount];
-                Vertices ??= new ushort[verticesCount];
+                    Normals ??= new ushort[normalsCount];
+                    Vertices ??= new ushort[verticesCount];
 
-                for (int i = 0; i < Vertices.Length; i++)
-                {
-                    if (i < Normals.Length)
-                        Normals[i] = s.Serialize<ushort>(Normals[i], name: $"{nameof(Normals)}[{i}]");
+                    for (int i = 0; i < Vertices.Length; i++)
+                    {
+                        if (i < Normals.Length)
+                            Normals[i] = s.Serialize<ushort>(Normals[i], name: $"{nameof(Normals)}[{i}]");
 
-                    if (Pre_HasColorTable && !(Mode.TME && (Mode.IsQuad || rgbCount == 1)) && i < RGBIndices.Length)
-                        RGBIndices[i] = s.Serialize<ushort>(RGBIndices[i], name: $"{nameof(RGBIndices)}[{i}]");
+                        Vertices[i] = s.Serialize<ushort>(Vertices[i], name: $"{nameof(Vertices)}[{i}]");
+                    }
 
-                    Vertices[i] = s.Serialize<ushort>(Vertices[i], name: $"{nameof(Vertices)}[{i}]");
+                    s.Align();
                 }
+                else
+                {
+                    // TODO: Improve this code. There is no documentation which seems to match this, so it's quite messy and might not always work.
 
-                s.Align();
+                    // Check if it has a texture
+                    if (Mode.TME)
+                    {
+                        UV ??= new PS1_TMD_UV[Mode.IsQuad ? 4 : 3];
+
+                        UV[0] = s.SerializeObject<PS1_TMD_UV>(UV[0], name: $"{nameof(UV)}[0]");
+                        CBA = s.SerializeObject<PS1_CBA>(CBA, name: nameof(CBA));
+                        UV[1] = s.SerializeObject<PS1_TMD_UV>(UV[1], name: $"{nameof(UV)}[1]");
+                        TSB = s.SerializeObject<PS1_TSB>(TSB, name: nameof(TSB));
+                        UV[2] = s.SerializeObject<PS1_TMD_UV>(UV[2], name: $"{nameof(UV)}[2]");
+
+                        if (!Mode.IsQuad && rgbCount != 1)
+                            s.Align();
+
+                        if (Mode.IsQuad)
+                        {
+                            UV[3] = s.SerializeObject<PS1_TMD_UV>(UV[3], name: $"{nameof(UV)}[3]");
+
+                            RGBIndices = s.SerializeArray<ushort>(RGBIndices, rgbCount, name: nameof(RGBIndices));
+
+                            s.Align();
+                        }
+                        else if (rgbCount == 1)
+                        {
+                            RGBIndices = s.SerializeArray<ushort>(RGBIndices, rgbCount, name: nameof(RGBIndices));
+                            s.Align();
+                        }
+                    }
+
+                    RGBIndices ??= new ushort[rgbCount];
+
+                    Normals ??= new ushort[normalsCount];
+                    Vertices ??= new ushort[verticesCount];
+
+                    if (rgbCount == 0 && normalsCount == verticesCount)
+                    {
+                        Normals = s.SerializeArray<ushort>(Normals, normalsCount, name: nameof(Normals));
+                        Vertices = s.SerializeArray<ushort>(Vertices, verticesCount, name: nameof(Vertices));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Vertices.Length; i++)
+                        {
+                            if (i < Normals.Length)
+                                Normals[i] = s.Serialize<ushort>(Normals[i], name: $"{nameof(Normals)}[{i}]");
+
+                            if ((!Mode.TME || (!Mode.IsQuad && rgbCount != 1)) && i < RGBIndices.Length)
+                                RGBIndices[i] = s.Serialize<ushort>(RGBIndices[i], name: $"{nameof(RGBIndices)}[{i}]");
+
+                            Vertices[i] = s.Serialize<ushort>(Vertices[i], name: $"{nameof(Vertices)}[{i}]");
+                        }
+                    }
+
+                    s.Align();
+                }
             }
             else if (Mode.Code == PS1_TMD_PacketMode.PacketModeCODE.StraightLine)
             {
