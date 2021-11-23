@@ -28,11 +28,11 @@ namespace BinarySerializer.PS1
 
             s.SerializePadding(2, logIfNotNull: true);
 
-            s.SerializeBitValues<uint>(bitFunc =>
+            s.DoBits<uint>(b =>
             {
-                ColorFormat = (TIM_ColorFormat)bitFunc((int)ColorFormat, 3, name: nameof(ColorFormat));
-                HasClut = bitFunc(HasClut ? 1 : 0, 1, name: nameof(HasClut)) == 1;
-                bitFunc(default, 28, name: "Padding");
+                ColorFormat = (TIM_ColorFormat)b.SerializeBits<int>((int)ColorFormat, 3, name: nameof(ColorFormat));
+                HasClut = b.SerializeBits<int>(HasClut ? 1 : 0, 1, name: nameof(HasClut)) == 1;
+                b.SerializeBits<int>(default, 28, name: "Padding");
             });
 
             if (HasClut)

@@ -39,14 +39,14 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            s.SerializeBitValues<byte>(bitFunc =>
+            s.DoBits<byte>(b =>
             {
-                TGE = bitFunc(TGE ? 1 : 0, 1, name: nameof(TGE)) == 1;
-                ABE = bitFunc(ABE ? 1 : 0, 1, name: nameof(ABE)) == 1;
-                TME = bitFunc(TME ? 1 : 0, 1, name: nameof(TME)) == 1;
-                IsQuad = bitFunc(IsQuad ? 1 : 0, 1, name: nameof(IsQuad)) == 1;
-                IIP = bitFunc(IIP ? 1 : 0, 1, name: nameof(IIP)) == 1;
-                Code = (PacketModeCODE)bitFunc((int)Code, 3, name: nameof(Code));
+                TGE = b.SerializeBits<int>(TGE ? 1 : 0, 1, name: nameof(TGE)) == 1;
+                ABE = b.SerializeBits<int>(ABE ? 1 : 0, 1, name: nameof(ABE)) == 1;
+                TME = b.SerializeBits<int>(TME ? 1 : 0, 1, name: nameof(TME)) == 1;
+                IsQuad = b.SerializeBits<int>(IsQuad ? 1 : 0, 1, name: nameof(IsQuad)) == 1;
+                IIP = b.SerializeBits<int>(IIP ? 1 : 0, 1, name: nameof(IIP)) == 1;
+                Code = (PacketModeCODE)b.SerializeBits<int>((int)Code, 3, name: nameof(Code));
             });
         }
 

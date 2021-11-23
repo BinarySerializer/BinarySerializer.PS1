@@ -10,12 +10,12 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                TX = (byte)bitFunc(TX, 4, name: nameof(TX));
-                TY = (byte)bitFunc(TY, 1, name: nameof(TY));
-                ABR = (byte)bitFunc(ABR, 2, name: nameof(ABR));
-                TP = (TexturePageTP)bitFunc((byte)TP, 2, name: nameof(TP));
+                TX = (byte)b.SerializeBits<int>(TX, 4, name: nameof(TX));
+                TY = (byte)b.SerializeBits<int>(TY, 1, name: nameof(TY));
+                ABR = (byte)b.SerializeBits<int>(ABR, 2, name: nameof(ABR));
+                TP = (TexturePageTP)b.SerializeBits<int>((byte)TP, 2, name: nameof(TP));
             });
         }
 

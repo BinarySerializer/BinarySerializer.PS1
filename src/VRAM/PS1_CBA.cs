@@ -7,11 +7,11 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                ClutX = bitFunc(ClutX, 6, name: nameof(ClutX));
-                ClutY = bitFunc(ClutY, 9, name: nameof(ClutY));
-                bitFunc(default, 1, name: "Padding");
+                ClutX = b.SerializeBits<int>(ClutX, 6, name: nameof(ClutX));
+                ClutY = b.SerializeBits<int>(ClutY, 9, name: nameof(ClutY));
+                b.SerializeBits<int>(default, 1, name: "Padding");
             });
         }
     }

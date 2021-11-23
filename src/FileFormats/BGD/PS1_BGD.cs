@@ -29,11 +29,11 @@ namespace BinarySerializer.PS1
             if (Version != 0x00)
                 throw new Exception($"Invalid Version {Version}");
 
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                bitFunc(0, 14, name: "Reserved");
-                IsATTR16Bit = bitFunc(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
-                HasATTR = bitFunc(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
+                b.SerializeBits<int>(0, 14, name: "Reserved");
+                IsATTR16Bit = b.SerializeBits<int>(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
+                HasATTR = b.SerializeBits<int>(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
             });
 
             MapWidth = s.Serialize<byte>(MapWidth, name: nameof(MapWidth));

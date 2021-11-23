@@ -25,11 +25,11 @@ namespace BinarySerializer.PS1
             if (Version != 0x03)
                 throw new Exception($"Invalid Version {Version}");
 
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                bitFunc(0, 14, name: "Reserved");
-                HasATTR = bitFunc(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
-                IsATTR16Bit = bitFunc(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
+                b.SerializeBits<int>(0, 14, name: "Reserved");
+                HasATTR = b.SerializeBits<int>(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
+                IsATTR16Bit = b.SerializeBits<int>(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
             });
 
             CellsCount = s.Serialize<ushort>(CellsCount, name: nameof(CellsCount));
@@ -52,11 +52,11 @@ namespace BinarySerializer.PS1
                 XOffset = s.Serialize<byte>(XOffset, name: nameof(XOffset));
                 YOffset = s.Serialize<byte>(YOffset, name: nameof(YOffset));
                 
-                s.SerializeBitValues<ushort>(bitFunc =>
+                s.DoBits<ushort>(b =>
                 {
-                    ClutX = bitFunc(ClutX, 6, name: nameof(ClutX));
-                    ClutY = bitFunc(ClutY, 9, name: nameof(ClutY));
-                    ABE = bitFunc(ABE ? 1 : 0, 1, name: nameof(ABE)) == 1;
+                    ClutX = b.SerializeBits<int>(ClutX, 6, name: nameof(ClutX));
+                    ClutY = b.SerializeBits<int>(ClutY, 9, name: nameof(ClutY));
+                    ABE = b.SerializeBits<int>(ABE ? 1 : 0, 1, name: nameof(ABE)) == 1;
                 });
             }
         }
