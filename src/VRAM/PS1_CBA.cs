@@ -11,7 +11,7 @@
             {
                 ClutX = b.SerializeBits<int>(ClutX, 6, name: nameof(ClutX));
                 ClutY = b.SerializeBits<int>(ClutY, 9, name: nameof(ClutY));
-                b.SerializeBits<int>(default, 1, name: "Padding");
+                b.SerializePadding(1, logIfNotNull: true);
             });
         }
     }

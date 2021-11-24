@@ -41,12 +41,12 @@
         {
             s.DoBits<byte>(b =>
             {
-                TGE = b.SerializeBits<int>(TGE ? 1 : 0, 1, name: nameof(TGE)) == 1;
-                ABE = b.SerializeBits<int>(ABE ? 1 : 0, 1, name: nameof(ABE)) == 1;
-                TME = b.SerializeBits<int>(TME ? 1 : 0, 1, name: nameof(TME)) == 1;
-                IsQuad = b.SerializeBits<int>(IsQuad ? 1 : 0, 1, name: nameof(IsQuad)) == 1;
-                IIP = b.SerializeBits<int>(IIP ? 1 : 0, 1, name: nameof(IIP)) == 1;
-                Code = (PacketModeCODE)b.SerializeBits<int>((int)Code, 3, name: nameof(Code));
+                TGE = b.SerializeBits<bool>(TGE, 1, name: nameof(TGE));
+                ABE = b.SerializeBits<bool>(ABE, 1, name: nameof(ABE));
+                TME = b.SerializeBits<bool>(TME, 1, name: nameof(TME));
+                IsQuad = b.SerializeBits<bool>(IsQuad, 1, name: nameof(IsQuad));
+                IIP = b.SerializeBits<bool>(IIP, 1, name: nameof(IIP));
+                Code = b.SerializeBits<PacketModeCODE>(Code, 3, name: nameof(Code));
             });
         }
 

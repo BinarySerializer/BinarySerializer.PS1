@@ -32,8 +32,8 @@ namespace BinarySerializer.PS1
             s.DoBits<ushort>(b =>
             {
                 b.SerializeBits<int>(0, 14, name: "Reserved");
-                IsATTR16Bit = b.SerializeBits<int>(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
-                HasATTR = b.SerializeBits<int>(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
+                IsATTR16Bit = b.SerializeBits<bool>(IsATTR16Bit, 1, name: nameof(IsATTR16Bit));
+                HasATTR = b.SerializeBits<bool>(HasATTR, 1, name: nameof(HasATTR));
             });
 
             MapWidth = s.Serialize<byte>(MapWidth, name: nameof(MapWidth));

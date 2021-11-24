@@ -12,10 +12,10 @@
         {
             s.DoBits<ushort>(b =>
             {
-                TX = (byte)b.SerializeBits<int>(TX, 4, name: nameof(TX));
-                TY = (byte)b.SerializeBits<int>(TY, 1, name: nameof(TY));
-                ABR = (byte)b.SerializeBits<int>(ABR, 2, name: nameof(ABR));
-                TP = (TexturePageTP)b.SerializeBits<int>((byte)TP, 2, name: nameof(TP));
+                TX = b.SerializeBits<byte>(TX, 4, name: nameof(TX));
+                TY = b.SerializeBits<byte>(TY, 1, name: nameof(TY));
+                ABR = b.SerializeBits<byte>(ABR, 2, name: nameof(ABR));
+                TP = b.SerializeBits<TexturePageTP>(TP, 2, name: nameof(TP));
             });
         }
 

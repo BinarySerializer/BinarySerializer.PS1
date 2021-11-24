@@ -30,9 +30,9 @@ namespace BinarySerializer.PS1
 
             s.DoBits<uint>(b =>
             {
-                ColorFormat = (TIM_ColorFormat)b.SerializeBits<int>((int)ColorFormat, 3, name: nameof(ColorFormat));
-                HasClut = b.SerializeBits<int>(HasClut ? 1 : 0, 1, name: nameof(HasClut)) == 1;
-                b.SerializeBits<int>(default, 28, name: "Padding");
+                ColorFormat = b.SerializeBits<TIM_ColorFormat>(ColorFormat, 3, name: nameof(ColorFormat));
+                HasClut = b.SerializeBits<bool>(HasClut, 1, name: nameof(HasClut));
+                b.SerializePadding(28, logIfNotNull: true);
             });
 
             if (HasClut)

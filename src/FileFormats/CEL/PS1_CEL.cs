@@ -28,8 +28,8 @@ namespace BinarySerializer.PS1
             s.DoBits<ushort>(b =>
             {
                 b.SerializeBits<int>(0, 14, name: "Reserved");
-                HasATTR = b.SerializeBits<int>(HasATTR ? 1 : 0, 1, name: nameof(HasATTR)) == 1;
-                IsATTR16Bit = b.SerializeBits<int>(IsATTR16Bit ? 1 : 0, 1, name: nameof(IsATTR16Bit)) == 1;
+                HasATTR = b.SerializeBits<bool>(HasATTR, 1, name: nameof(HasATTR));
+                IsATTR16Bit = b.SerializeBits<bool>(IsATTR16Bit, 1, name: nameof(IsATTR16Bit));
             });
 
             CellsCount = s.Serialize<ushort>(CellsCount, name: nameof(CellsCount));
@@ -56,7 +56,7 @@ namespace BinarySerializer.PS1
                 {
                     ClutX = b.SerializeBits<int>(ClutX, 6, name: nameof(ClutX));
                     ClutY = b.SerializeBits<int>(ClutY, 9, name: nameof(ClutY));
-                    ABE = b.SerializeBits<int>(ABE ? 1 : 0, 1, name: nameof(ABE)) == 1;
+                    ABE = b.SerializeBits<bool>(ABE, 1, name: nameof(ABE));
                 });
             }
         }
