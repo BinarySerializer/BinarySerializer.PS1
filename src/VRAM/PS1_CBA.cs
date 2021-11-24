@@ -14,5 +14,8 @@
                 b.SerializePadding(1, logIfNotNull: true);
             });
         }
+
+        public override bool UseShortLog => true;
+        public override string ToString() => $"CBA({ClutX}, {ClutY})";
     }
 }

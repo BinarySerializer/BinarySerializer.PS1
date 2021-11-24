@@ -13,5 +13,8 @@
             Z = s.Serialize<short>(Z, name: nameof(Z));
             s.SerializePadding(2, logIfNotNull: true);
         }
+
+        public override bool UseShortLog => true;
+        public override string ToString() => $"Vertex({X}, {Y}, {Z})";
     }
 }

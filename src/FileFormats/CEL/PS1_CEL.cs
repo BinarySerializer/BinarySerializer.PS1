@@ -59,6 +59,9 @@ namespace BinarySerializer.PS1
                     ABE = b.SerializeBits<bool>(ABE, 1, name: nameof(ABE));
                 });
             }
+
+            public override bool UseShortLog => true;
+            public override string ToString() => $"Cell(X: {XOffset}, Y: {YOffset}, ClutX: {ClutX}, ClutY: {ClutY}, ABE: {ABE})";
         }
     }
 }
