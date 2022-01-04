@@ -5,7 +5,7 @@
     /// </summary>
     public class PS1_MemoryMappedFile : MemoryMappedFile 
     {
-        public PS1_MemoryMappedFile(Context context, string filePath, uint baseAddress, InvalidPointerMode currentInvalidPointerMode, Endian endianness = Endian.Little, long? fileLength = null) : base(context, filePath, baseAddress, endianness, fileLength)
+        public PS1_MemoryMappedFile(Context context, string filePath, uint baseAddress, InvalidPointerMode currentInvalidPointerMode, Endian? endianness = null, long? fileLength = null) : base(context, filePath, baseAddress, endianness, fileLength)
         {
             CurrentInvalidPointerMode = currentInvalidPointerMode;
         }
