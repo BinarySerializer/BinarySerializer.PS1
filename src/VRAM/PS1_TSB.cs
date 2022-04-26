@@ -1,6 +1,8 @@
-﻿namespace BinarySerializer.PS1
+﻿using System;
+
+namespace BinarySerializer.PS1
 {
-    public class PS1_TSB : BinarySerializable
+    public class PS1_TSB : BinarySerializable, IEquatable<PS1_TSB>
     {
         // See http://hitmen.c02.at/files/docs/psx/psx.pdf page 37
         public byte TX { get; set; } // value * 64
@@ -25,5 +27,37 @@
             CLUT_8Bit = 1,
             Direct_15Bit = 2,
         }
+
+
+        #region Equality
+        public override bool Equals(object other) {
+            if (other is PS1_TSB)
+                return Equals((PS1_TSB)other);
+            else
+                return false;
+        }
+
+        public bool Equals(PS1_TSB other) {
+            if(other == null) return false;
+            if (other.TP != TP || other.TX != TX || other.TY != TY || other.ABR != ABR)
+                return false;
+            return true;
+        }
+
+        public override int GetHashCode() {
+            return (TP, TX, TY, ABR).GetHashCode();
+        }
+
+        public static bool operator ==(PS1_TSB term1, PS1_TSB term2) {
+            if ((object)term1 == null) {
+                return ((object)term2 == null);
+            }
+            return term1.Equals(term2);
+        }
+
+        public static bool operator !=(PS1_TSB term1, PS1_TSB term2) {
+            return !(term1 == term2);
+        }
+        #endregion
     }
 }
