@@ -183,7 +183,7 @@ namespace BinarySerializer.PS1
             // a color table since the length doesn't match the actual packet length then.
             if (s.CurrentPointer != endPointer && !Pre_HasColorTable)
             {
-                s.LogWarning($"Packet was not fully serialized. Expected end was {endPointer}, end is {s.CurrentPointer}.");
+                s.Context.Logger?.LogWarning($"Packet was not fully serialized. Expected end was {endPointer}, end is {s.CurrentPointer}.");
                 s.Goto(endPointer);
             }
         }
