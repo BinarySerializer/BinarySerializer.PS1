@@ -39,7 +39,7 @@ namespace BinarySerializer.PS1
             Cells = s.SerializeObjectArray<Cell>(Cells, CellsCount, name: nameof(Cells));
         }
 
-        public class Cell : BinarySerializable
+        public class Cell : BinarySerializable, ISerializerShortLog
         {
             public byte XOffset { get; set; }
             public byte YOffset { get; set; }
@@ -60,7 +60,7 @@ namespace BinarySerializer.PS1
                 });
             }
 
-            public override bool UseShortLog => true;
+            public string ShortLog => ToString();
             public override string ToString() => $"Cell(X: {XOffset}, Y: {YOffset}, ClutX: {ClutX}, ClutY: {ClutY}, ABE: {ABE})";
         }
     }

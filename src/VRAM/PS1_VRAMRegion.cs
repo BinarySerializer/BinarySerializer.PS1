@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_VRAMRegion : BinarySerializable
+    public class PS1_VRAMRegion : BinarySerializable, ISerializerShortLog
     {
         public PS1_VRAMRegion() { }
 
@@ -25,7 +25,7 @@
             Height = s.Serialize<short>(Height, name: nameof(Height));
         }
 
-        public override bool UseShortLog => true;
+        public string ShortLog => ToString();
         public override string ToString() => $"(x: {XPos}, y:{YPos}, width:{Width}, height:{Height})";
     }
 }

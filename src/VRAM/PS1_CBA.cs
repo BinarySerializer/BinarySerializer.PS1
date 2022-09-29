@@ -2,7 +2,7 @@
 
 namespace BinarySerializer.PS1
 {
-    public class PS1_CBA : BinarySerializable, IEquatable<PS1_CBA>
+    public class PS1_CBA : BinarySerializable, IEquatable<PS1_CBA>, ISerializerShortLog
     {
         public int ClutX { get; set; }
         public int ClutY { get; set; }
@@ -17,7 +17,7 @@ namespace BinarySerializer.PS1
             });
         }
 
-        public override bool UseShortLog => true;
+        public string ShortLog => ToString();
         public override string ToString() => $"CBA({ClutX}, {ClutY})";
 
         #region Equality

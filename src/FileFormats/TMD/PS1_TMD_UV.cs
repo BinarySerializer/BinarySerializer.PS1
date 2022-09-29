@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_UV : BinarySerializable
+    public class PS1_TMD_UV : BinarySerializable, ISerializerShortLog
     {
         public byte U { get; set; }
         public byte V { get; set; }
@@ -11,7 +11,7 @@
             V = s.Serialize<byte>(V, name: nameof(V));
         }
 
-        public override bool UseShortLog => true;
+        public string ShortLog => ToString();
         public override string ToString() => $"UV({U}, {V})";
     }
 }

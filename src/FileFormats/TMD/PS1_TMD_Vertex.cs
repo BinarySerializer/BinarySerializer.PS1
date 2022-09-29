@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_Vertex : BinarySerializable
+    public class PS1_TMD_Vertex : BinarySerializable, ISerializerShortLog
     {
         public short X { get; set; }
         public short Y { get; set; }
@@ -14,7 +14,7 @@
             s.SerializePadding(2, logIfNotNull: true);
         }
 
-        public override bool UseShortLog => true;
+        public string ShortLog => ToString();
         public override string ToString() => $"Vertex({X}, {Y}, {Z})";
     }
 }
