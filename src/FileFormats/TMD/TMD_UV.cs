@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_UV : BinarySerializable, ISerializerShortLog
+    public class TMD_UV : BinarySerializable, ISerializerShortLog
     {
         public byte U { get; set; }
         public byte V { get; set; }

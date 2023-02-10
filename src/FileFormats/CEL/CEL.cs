@@ -2,9 +2,11 @@
 
 namespace BinarySerializer.PS1
 {
-    public class PS1_CEL : BinarySerializable
+    /// <summary>
+    /// Background cell data file
+    /// </summary>
+    public class CEL : BinarySerializable
     {
-        public byte ID { get; set; }
         public byte Version { get; set; }
         public bool HasATTR { get; set; }
         public bool IsATTR16Bit { get; set; }
@@ -15,10 +17,7 @@ namespace BinarySerializer.PS1
 
         public override void SerializeImpl(SerializerObject s)
         {
-            ID = s.Serialize<byte>(ID, name: nameof(ID));
-
-            if (ID != 0x22)
-                throw new Exception($"Invalid ID {ID}");
+            s.SerializeMagic<byte>(0x22, name: "ID");
 
             Version = s.Serialize<byte>(Version, name: nameof(Version));
 

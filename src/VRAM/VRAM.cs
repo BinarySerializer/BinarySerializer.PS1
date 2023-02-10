@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BinarySerializer.PS1
 {
-    public class PS1_VRAM
+    public class VRAM
     {
         #region Constant Fields
 
@@ -16,7 +16,7 @@ namespace BinarySerializer.PS1
         #region Public Properties
 
         public Page[][] Pages { get; } = new Page[2][]; // y, x
-        public List<Palette> Palettes { get; } = new List<Palette>(); // Optional collection of any palettes in the V-RAM
+        public List<Palette> Palettes { get; } = new(); // Optional collection of any palettes in the VRAM
         public int CurrentXPage { get; set; }
         public int CurrentYPage { get; set; }
         public int NextYInPage { get; set; }
@@ -25,7 +25,7 @@ namespace BinarySerializer.PS1
 
         #region Reserved Data
 
-        private HashSet<ReservedBlock> ReservedBlocks { get; } = new HashSet<ReservedBlock>();
+        private HashSet<ReservedBlock> ReservedBlocks { get; } = new();
 
         public void ReserveBlock(int x, int y, int width, int height) => ReservedBlocks.Add(new ReservedBlock()
         {
@@ -185,12 +185,12 @@ namespace BinarySerializer.PS1
         /// </summary>
         /// <param name="data">The data to add</param>
         /// <param name="region">The region to add to</param>
-        public void AddDataAt(byte[] data, PS1_VRAMRegion region)
+        public void AddDataAt(byte[] data, Rect region)
         {
             AddDataAt(0, 0, region.XPos * 2, region.YPos, data, region.Width * 2, region.Height);
         }
 
-        public void AddPalette(RGBA5551Color[] colors, PS1_VRAMRegion region)
+        public void AddPalette(RGBA5551Color[] colors, Rect region)
         {
             AddDataAt(colors.SelectMany(c => BitConverter.GetBytes((ushort)c.ColorValue)).ToArray(), region);
             Palettes.Add(new Palette(colors, region.XPos * 2, region.YPos));
@@ -206,7 +206,7 @@ namespace BinarySerializer.PS1
         /// Adds the TIM image and palette data to the VRAM
         /// </summary>
         /// <param name="tim">The TIM file to add</param>
-        public void AddTIM(PS1_TIM tim)
+        public void AddTIM(TIM tim)
         {
             if (tim == null)
                 throw new ArgumentNullException(nameof(tim));

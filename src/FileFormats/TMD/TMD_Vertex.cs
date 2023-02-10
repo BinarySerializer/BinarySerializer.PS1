@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_Vertex : BinarySerializable, ISerializerShortLog
+    public class TMD_Vertex : BinarySerializable, ISerializerShortLog
     {
         public short X { get; set; }
         public short Y { get; set; }

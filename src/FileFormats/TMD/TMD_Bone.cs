@@ -1,6 +1,9 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_Bone : BinarySerializable
+    /// <summary>
+    /// Undocumented, but used in Klonoa
+    /// </summary>
+    public class TMD_Bone : BinarySerializable
     {
         public bool Pre_HasColorTable { get; set; }
         public bool Pre_HasBonePositions { get; set; }

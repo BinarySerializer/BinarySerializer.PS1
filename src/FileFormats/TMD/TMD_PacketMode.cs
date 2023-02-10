@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_PacketMode : BinarySerializable
+    public class TMD_PacketMode : BinarySerializable
     {
         /// <summary>
         /// Brightness calculation at time of texture mapping

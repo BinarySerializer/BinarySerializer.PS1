@@ -2,9 +2,12 @@
 
 namespace BinarySerializer.PS1
 {
-    public class PS1_CBA : BinarySerializable, IEquatable<PS1_CBA>, ISerializerShortLog
+    /// <summary>
+    /// Color table position
+    /// </summary>
+    public class CBA : BinarySerializable, IEquatable<CBA>, ISerializerShortLog
     {
-        public int ClutX { get; set; }
+        public int ClutX { get; set; } // Multiply by 16 to get actual value
         public int ClutY { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
@@ -21,34 +24,36 @@ namespace BinarySerializer.PS1
         public override string ToString() => $"CBA({ClutX}, {ClutY})";
 
         #region Equality
-        public override bool Equals(object other) {
-            if (other is PS1_CBA)
-                return Equals((PS1_CBA)other);
+
+        public override bool Equals(object other) 
+        {
+            if (other is CBA cba)
+                return Equals(cba);
             else
                 return false;
         }
 
-        public bool Equals(PS1_CBA other) {
-            if (other == null) return false;
+        public bool Equals(CBA other) 
+        {
+            if (other == null) 
+                return false;
             if (other.ClutX != ClutX || other.ClutY != ClutY)
                 return false;
             return true;
         }
 
-        public override int GetHashCode() {
-            return (ClutX, ClutY).GetHashCode();
-        }
+        public override int GetHashCode() => (ClutX, ClutY).GetHashCode();
 
-        public static bool operator ==(PS1_CBA term1, PS1_CBA term2) {
-            if ((object)term1 == null) {
-                return ((object)term2 == null);
-            }
+        public static bool operator ==(CBA term1, CBA term2) 
+        {
+            if ((object)term1 == null) 
+                return (object)term2 == null;
+
             return term1.Equals(term2);
         }
 
-        public static bool operator !=(PS1_CBA term1, PS1_CBA term2) {
-            return !(term1 == term2);
-        }
+        public static bool operator !=(CBA term1, CBA term2) => !(term1 == term2);
+
         #endregion
     }
 }

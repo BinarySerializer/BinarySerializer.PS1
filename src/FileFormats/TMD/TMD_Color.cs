@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_Color : BinarySerializable
+    public class TMD_Color : BinarySerializable
     {
         // Note: The color values have a range between 0-2 rather than 0-1
         public RGB888Color Color { get; set; }

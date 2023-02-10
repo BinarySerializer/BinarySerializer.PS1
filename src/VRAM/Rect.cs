@@ -1,10 +1,14 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_VRAMRegion : BinarySerializable, ISerializerShortLog
+    /// <summary>
+    /// Used by several Psyq library functions to specify a rectangular area of the frame buffer. Neither negative values,
+    /// nor values exceeding the size of the frame buffer (1024x512), may be specified.
+    /// </summary>
+    public class Rect : BinarySerializable, ISerializerShortLog
     {
-        public PS1_VRAMRegion() { }
+        public Rect() { }
 
-        public PS1_VRAMRegion(short xPos, short yPos, short width, short height)
+        public Rect(short xPos, short yPos, short width, short height)
         {
             XPos = xPos;
             YPos = yPos;
@@ -26,6 +30,6 @@
         }
 
         public string ShortLog => ToString();
-        public override string ToString() => $"(x: {XPos}, y:{YPos}, width:{Width}, height:{Height})";
+        public override string ToString() => $"(x: {XPos}, y:{YPos}, w:{Width}, h:{Height})";
     }
 }

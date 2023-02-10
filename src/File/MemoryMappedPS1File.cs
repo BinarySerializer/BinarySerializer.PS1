@@ -3,9 +3,16 @@
     /// <summary>
     /// A memory mapped file with the option to allow unmapped developer pointers
     /// </summary>
-    public class PS1_MemoryMappedFile : MemoryMappedFile 
+    public class MemoryMappedPS1File : MemoryMappedFile 
     {
-        public PS1_MemoryMappedFile(Context context, string filePath, uint baseAddress, InvalidPointerMode currentInvalidPointerMode, Endian? endianness = null, long? fileLength = null) : base(context, filePath, baseAddress, endianness, fileLength)
+        public MemoryMappedPS1File(
+            Context context, 
+            string filePath, 
+            uint baseAddress, 
+            InvalidPointerMode currentInvalidPointerMode, 
+            Endian? endianness = null, 
+            long? fileLength = null) 
+            : base(context, filePath, baseAddress, endianness, fileLength)
         {
             CurrentInvalidPointerMode = currentInvalidPointerMode;
         }
@@ -17,7 +24,7 @@
 			var anchorOffset = anchor?.AbsoluteOffset ?? 0;
 			var offset = serializedValue + anchorOffset;
 			offset ^= 0xFFFFFFFF;
-			return offset >= 0x80000000 && offset < 0x807FFFFF;
+			return offset is >= 0x80000000 and < 0x807FFFFF;
 		}
 
 		public override bool AllowInvalidPointer(long serializedValue, Pointer anchor = null) => CurrentInvalidPointerMode switch

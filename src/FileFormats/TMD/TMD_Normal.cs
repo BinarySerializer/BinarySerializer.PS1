@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_Normal : BinarySerializable
+    public class TMD_Normal : BinarySerializable
     {
         public FixedPointInt16 X { get; set; }
         public FixedPointInt16 Y { get; set; }

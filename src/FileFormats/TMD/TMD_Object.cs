@@ -1,10 +1,10 @@
 ﻿namespace BinarySerializer.PS1
 {
-    public class PS1_TMD_Object : BinarySerializable
+    public class TMD_Object : BinarySerializable
     {
         public Pointer Pre_PointerAnchor { get; set; }
         public bool Pre_HasBones { get; set; }
-        public bool Pre_HasColorTable { get; set; }
+        public bool Pre_HasColorTable { get; set; } // Undocumented, but used in Klonoa
         public bool Pre_HasBonePositions { get; set; }
 
         public Pointer VerticesPointer { get; set; }
@@ -17,13 +17,13 @@
         public uint PrimitivesCount { get; set; }
         public int Scale { get; set; } // Raised to the second power
         public int BonesCount { get; set; }
-        public PS1_TMD_Bone[] Bones { get; set; }
+        public TMD_Bone[] Bones { get; set; }
 
         // Serialized from pointers
-        public PS1_TMD_Vertex[] Vertices { get; set; }
-        public PS1_TMD_Normal[] Normals { get; set; }
-        public PS1_TMD_Color[] Colors { get; set; }
-        public PS1_TMD_Packet[] Primitives { get; set; }
+        public TMD_Vertex[] Vertices { get; set; }
+        public TMD_Normal[] Normals { get; set; }
+        public TMD_Color[] Colors { get; set; }
+        public TMD_Packet[] Primitives { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -44,7 +44,7 @@
             if (Pre_HasBones)
             {
                 BonesCount = s.Serialize<int>(BonesCount, name: nameof(BonesCount));
-                Bones = s.SerializeObjectArray<PS1_TMD_Bone>(Bones, BonesCount, x =>
+                Bones = s.SerializeObjectArray<TMD_Bone>(Bones, BonesCount, x =>
                 {
                     x.Pre_HasColorTable = Pre_HasColorTable;
                     x.Pre_HasBonePositions = Pre_HasBonePositions;
@@ -55,10 +55,10 @@
                 Scale = s.Serialize<int>(Scale, name: nameof(Scale));
             }
 
-            s.DoAt(VerticesPointer, () => Vertices = s.SerializeObjectArray<PS1_TMD_Vertex>(Vertices, VerticesCount, name: nameof(Vertices)));
-            s.DoAt(NormalsPointer, () => Normals = s.SerializeObjectArray<PS1_TMD_Normal>(Normals, NormalsCount, name: nameof(Normals)));
-            s.DoAt(ColorsPointer, () => Colors = s.SerializeObjectArray<PS1_TMD_Color>(Colors, ColorsCount, name: nameof(Colors)));
-            s.DoAt(PrimitivesPointer, () => Primitives = s.SerializeObjectArray<PS1_TMD_Packet>(Primitives, PrimitivesCount, onPreSerialize: x => x.Pre_HasColorTable = Pre_HasColorTable, name: nameof(Primitives)));
+            s.DoAt(VerticesPointer, () => Vertices = s.SerializeObjectArray<TMD_Vertex>(Vertices, VerticesCount, name: nameof(Vertices)));
+            s.DoAt(NormalsPointer, () => Normals = s.SerializeObjectArray<TMD_Normal>(Normals, NormalsCount, name: nameof(Normals)));
+            s.DoAt(ColorsPointer, () => Colors = s.SerializeObjectArray<TMD_Color>(Colors, ColorsCount, name: nameof(Colors)));
+            s.DoAt(PrimitivesPointer, () => Primitives = s.SerializeObjectArray<TMD_Packet>(Primitives, PrimitivesCount, onPreSerialize: x => x.Pre_HasColorTable = Pre_HasColorTable, name: nameof(Primitives)));
         }
     }
 }

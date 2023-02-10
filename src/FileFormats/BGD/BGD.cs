@@ -2,9 +2,11 @@
 
 namespace BinarySerializer.PS1
 {
-    public class PS1_BGD : BinarySerializable
+    /// <summary>
+    /// Background map data file
+    /// </summary>
+    public class BGD : BinarySerializable
     {
-        public byte ID { get; set; }
         public byte Version { get; set; }
         public bool HasATTR { get; set; }
         public bool IsATTR16Bit { get; set; }
@@ -19,10 +21,7 @@ namespace BinarySerializer.PS1
 
         public override void SerializeImpl(SerializerObject s)
         {
-            ID = s.Serialize<byte>(ID, name: nameof(ID));
-
-            if (ID != 0x23)
-                throw new Exception($"Invalid ID {ID}");
+            s.SerializeMagic<byte>(0x23, name: "ID");
 
             Version = s.Serialize<byte>(Version, name: nameof(Version));
 
