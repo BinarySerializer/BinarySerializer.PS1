@@ -202,6 +202,11 @@ namespace BinarySerializer.PS1
             Palettes.Add(new Palette(colors, pageX * PageWidth + x, pageY * PageHeight + y));
         }
 
+        public void AddPalette(Clut clut, int pageX, int pageY, int x, int y, int width = 512, int? height = null)
+        {
+            AddPalette(clut.Palette, pageX, pageY, x, y, width, height);
+        }
+
         /// <summary>
         /// Adds the TIM image and palette data to the VRAM
         /// </summary>
