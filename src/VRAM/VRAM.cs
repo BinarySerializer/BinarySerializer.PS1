@@ -190,13 +190,13 @@ namespace BinarySerializer.PS1
             AddDataAt(0, 0, region.XPos * 2, region.YPos, data, region.Width * 2, region.Height);
         }
 
-        public void AddPalette(RGBA5551Color[] colors, Rect region)
+        public void AddPalette(SerializableColor[] colors, Rect region)
         {
             AddDataAt(colors.SelectMany(c => BitConverter.GetBytes((ushort)c.ColorValue)).ToArray(), region);
             Palettes.Add(new Palette(colors, region.XPos * 2, region.YPos));
         }
 
-        public void AddPalette(RGBA5551Color[] colors, int pageX, int pageY, int x, int y, int width = 512, int? height = null)
+        public void AddPalette(SerializableColor[] colors, int pageX, int pageY, int x, int y, int width = 512, int? height = null)
         {
             AddDataAt(pageX, pageY, x, y, colors.SelectMany(c => BitConverter.GetBytes((ushort)c.ColorValue)).ToArray(), width, height);
             Palettes.Add(new Palette(colors, pageX * PageWidth + x, pageY * PageHeight + y));
@@ -369,14 +369,14 @@ namespace BinarySerializer.PS1
 
         public class Palette
         {
-            public Palette(RGBA5551Color[] colors, int x, int y)
+            public Palette(SerializableColor[] colors, int x, int y)
             {
                 Colors = colors;
                 X = x;
                 Y = y;
             }
 
-            public RGBA5551Color[] Colors { get; }
+            public SerializableColor[] Colors { get; }
             public int X { get; }
             public int Y { get; }
         }

@@ -65,13 +65,13 @@ namespace BinarySerializer.PS1
         {
             public int Length { get; set; }
             public Rect Region { get; set; }
-            public RGBA5551Color[] Palette { get; set; }
+            public SerializableColor[] Palette { get; set; }
 
             public override void SerializeImpl(SerializerObject s)
             {
                 Length = s.Serialize<int>(Length, name: nameof(Length));
                 Region = s.SerializeObject<Rect>(Region, name: nameof(Region));
-                Palette = s.SerializeObjectArray<RGBA5551Color>(Palette, Region.Width * Region.Height, name: nameof(Palette));
+                Palette = s.SerializeIntoArray<SerializableColor>(Palette, Region.Width * Region.Height, BitwiseColor.RGBA5551, name: nameof(Palette));
             }
         }
     }
